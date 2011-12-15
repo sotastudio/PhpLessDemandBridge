@@ -2,11 +2,22 @@
 /**
  * Demand Bridge to use phpless in a customizable way
  *
+ * Bootstrap / main logic
+ *
+ * Handling of rendering mode selection and everything else.
+ *
+ * @package PhpLessDemandBridge
+ * @link https://github.com/MorphexX/PhpLessDemandBridge
  * @author Andy Hausmann <andy.hausmann@gmx.de>
- * @package lessphp
- * @subpackage PhpLessDemandBridge
- * @todo Fetch some GETVars to process a parsing mode and the LESS root
- * @todo Return or compile/save the LESS stuff
+ * @copyright 2011 Andy Hausmann <andy.hausmann@gmx.de>
+ * @version 0.1.0
+ *
+ * @todo Optimize GETvar-fetching to provide the ability to choose the rendering mode
+ * @todo Optimite mode handling
+ * @todo Optimize debugging stuff
+ * @todo Add ability of force recompiling
+ * @todo Implement Client-side caching, this implies: sending headers and usage of etag
+ * @todo Implement rendering mode 'both'
  */
 
 // Bench: start time
@@ -16,71 +27,67 @@ $start = microtime(true);
 // Gzip output for faster transfer to client
 ini_set('zlib.output_compression', 2048);
 ini_set('zlib.output_compression_level', 4);
-if(isset($_SERVER['HTTP_ACCEPT_ENCODING']) &&
-	substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') &&
-	function_exists('ob_gzhandler') &&
-	!ini_get('zlib.output_compression') &&
-	((!ini_get('zlib.output_compression') || intval(ini_get('zlib.output_compression')) == 0))
+if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])
+	&& substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')
+	&& function_exists('ob_gzhandler')
+	&& !ini_get('zlib.output_compression')
+	&& ((!ini_get('zlib.output_compression') || intval(ini_get('zlib.output_compression')) == 0))
 ){
 	ob_start('ob_gzhandler');
-}
-else{
+} else{
 	ob_start();
 }
 
 
 // Include libs
-include('./config.php');
-require_once($config['compiler']);
+include ('./config.php');
+include ('./lib/lessphp/lessc.inc.php');
+include ('./lib/PhpLessDemandBridge.php');
+// Init config
+list($debug, $err) = array($config['debug'], FALSE);
 
 
-// Init file config
-list($less_fname, $css_fname) = array($config['less'], $config['css']);
-
-
-// Process files if passed through GETvars
+// Process GET var: file; contains the filename of the LESS root file
 if (isset($_GET['file'])) {
-	// Handle LESS file trough request (ftr)
 	$less_ftr = htmlspecialchars($_GET['file']);
-	// Get files dir by config
-	$less_ftrFileInfo = pathinfo($less_fname);
-	// Update LESS root file in config
-	$less_fname = $less_ftrFileInfo['dirname'] . '/' . $less_ftr;
+	$less_ftrFileInfo = pathinfo($config['lessFile']);
+	$config['lessFile'] = $less_ftrFileInfo['dirname'] . '/' . $less_ftr;
+}
+// Process GET var: mode; contains the rendering mode
+if (isset($_GET['mode'])) {
+	$config['mode'] = htmlspecialchars($_GET['mode']);
 }
 
 
-// Let's roll!
-if (file_exists($less_fname)) {
-	// load the cache
-	$cache_fname = $less_fname.".cache";
-	if (file_exists($cache_fname)) {
-		$cache = unserialize(file_get_contents($cache_fname));
-	} else {
-		$cache = $less_fname;
-	}
+// Try Container!
+$DemandBridge = new PhpLessDemandBridge('lessc');
+$DemandBridge->init($config);
 
-	// Recompile and save if its necessary
-	$new_cache = lessc::cexecute($cache);
-	// Collect timestamps
-	$cache_tstamp['prev'] = &$cache['updated'];
-	$cache_tstamp['cur'] = &$new_cache['updated'];
-	if (!is_array($cache) || $cache_tstamp['cur'] > $cache_tstamp['prev']) {
-		file_put_contents($cache_fname, serialize($new_cache));
-		// Compile Stylesheet
-		//file_put_contents($css_fname, $new_cache['compiled']);
-	}
+$mode = $DemandBridge->getRendering();
+
+if ($mode === 'compile') {
+	$DemandBridge->compile();
+} elseif ($mode === 'demand'){
+	$css = $DemandBridge->getCss();
+	echo $css;
 }
 
 
 // Bench: end time
 $end = microtime(true);
 
-// Collect debug info
-$times = array(
-	'OLD__' => $cache_tstamp['prev'],
-	'NEW__' =>$cache_tstamp['cur'],
-	'BS___' => filemtime($less_fname),
-	'BENCH' => $end - $start . ' s'
-);
 
-unset($cache, $new_cache);
+/*
+if (!$err) {
+	// Collect debug info
+	$times = array(
+		'OLD__' => $tstamp['prev'],
+		'NEW__' => $tstamp['cur'],
+		'BS___' => $tstamp['root'],
+		'BENCH' => $end - $start . ' s'
+	);
+	if ($debug) {
+		print_r($times);
+	}
+}
+*/
