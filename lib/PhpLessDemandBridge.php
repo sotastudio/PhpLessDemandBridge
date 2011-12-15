@@ -9,6 +9,7 @@
  * @version 0.1.0
  *
  * @todo Correct a bug which causes a rendering error in case of a missing slash at the end of a path
+ * @todo PHPDoc
  */
 class PhpLessDemandBridge
 {
@@ -233,10 +234,10 @@ class PhpLessDemandBridge
 	 * @param $name string
 	 * @return mixed
 	 */
-	/*public function __get($name)
+	public function __get($name)
 	{
 		return $this->$name;
-	}*/
+	}
 
 
 	/**
