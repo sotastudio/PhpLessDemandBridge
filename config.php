@@ -16,9 +16,11 @@
  *
  * @package PhpLessDemandBridge
  * @link https://github.com/MorphexX/PhpLessDemandBridge
+ * @link https://github.com/leafo/lessphp
+ * @link http://code.google.com/p/cssmin/
  * @author Andy Hausmann <andy.hausmann@gmx.de>
  * @copyright 2011 Andy Hausmann <andy.hausmann@gmx.de>
- * @version 0.1.0
+ * @version 0.3.0
  */
 $config = array(
 
@@ -36,5 +38,5 @@ $config = array(
 
 	// Misc stuff
 	'minify'		=> 1, // boolean
-	'debug' 		=> 1, // boolean
+	'debug' 		=> 0, // boolean
 );

@@ -2,13 +2,18 @@
 /**
  * Demand Bridge to use phpless in a customizable way
  *
+ * Parsing/compiling stuff.
+ *
  * @package PhpLessDemandBridge
  * @link https://github.com/MorphexX/PhpLessDemandBridge
+ * @link https://github.com/leafo/lessphp
+ * @link http://code.google.com/p/cssmin/
  * @author Andy Hausmann <andy.hausmann@gmx.de>
  * @copyright 2011 Andy Hausmann <andy.hausmann@gmx.de>
- * @version 0.1.0
+ * @version 0.3.0
  *
  * @todo Correct a bug which causes a rendering error in case of a missing slash at the end of a path
+ * @todo Write own timestamp checking method - the less compiler's is not that good, because it has to compile the files first.
  * @todo PHPDoc
  */
 class PhpLessDemandBridge
@@ -24,7 +29,6 @@ class PhpLessDemandBridge
 		'ext'	=> 'less'
 	);
 
-
     /**
      * Holds the CSS config - used to compile LESS and save the result into a CSS file.
      *
@@ -35,7 +39,6 @@ class PhpLessDemandBridge
         'name' 	=> 'styles',
 		'ext'	=> 'css'
     );
-
 
 	/**
 	 * Holds the cache file config - used for demand rendering
@@ -48,7 +51,6 @@ class PhpLessDemandBridge
 		'ext'  => 'cache'
 	);
 
-
     /**
      * Holds the Rendering config.
      *
@@ -60,9 +62,12 @@ class PhpLessDemandBridge
 		'selected'	=> ''
     );
 
-
+	/**
+	 * CSS minification flag.
+	 *
+	 * @var bool
+	 */
 	protected $minify = FALSE;
-
 
 	/**
 	 * Holds the used class names
@@ -78,24 +83,28 @@ class PhpLessDemandBridge
 
 
 	/**
-	 * Magical voodoo super function
+	 * Magical voodoo super function.
 	 *
 	 * Checks whether the LESS Compiler is available or not.
 	 * If its not, the whole package cannot proceed and will throw an exception.
 	 *
 	 * @todo Overhaul this to check for/return an already cached file (.cache on demand) in case the compiler isn't available for some reason - on compile mode here should nothing else be done.
-	 * @param $cClass string LESS Compiler Clasname
-	 * @return void
+	 * @return \PhpLessDemandBridge
 	 */
 	public function __construct()
 	{
 		if (!class_exists($this->classes['lessc'])){
 			throw new exception("LESS Compiler (' . $this->classes['lessc'] . ') not found; cannot proceed.");
-			exit();
 		}
 	}
 
-
+	/**
+	 * Initialization of the whole Config.
+	 *
+	 * @param array $cfg Configuration Array found in ../config.php
+	 * @return PhpLessDemandBridge
+	 * @throws exception
+	 */
 	public function init($cfg)
 	{
 		$this->setRendering($cfg['mode']);
@@ -113,19 +122,37 @@ class PhpLessDemandBridge
 		return $this;
 	}
 
-
+	/**
+	 * Fetches and returns the compiled CSS.
+	 *
+	 * @return string
+	 */
 	public function getCss()
 	{
 		return $this->processLess(TRUE);
 	}
 
-
+	/**
+	 * Initiates the CSS compiler.
+	 *
+	 * return void
+	 */
 	public function compile()
 	{
 		$this->processLess();
 	}
 
 
+	/**
+	 * Main LESS processing
+	 *
+	 * Check for timestamps and updates, if necessary, the .cache or .css storage file.
+	 * If CSS minification has been activated, this will be done first, right before storing or returning the code.
+	 *
+	 * @param bool $return Flag to additionally return the compiled CSS
+	 * @param bool $force Flag to force compilation and skip the cache
+	 * @return void|string Compiled CSS
+	 */
 	public function processLess($return = FALSE, $force = FALSE)
 	{
 		// Get file references
@@ -159,42 +186,86 @@ class PhpLessDemandBridge
 				file_put_contents($css_fname, $contentNew['compiled']);
 		}
 
-		if ($return === TRUE) return $contentNew['compiled'];
+		return ($return === TRUE)
+			? $contentNew['compiled']
+			: FALSE;
 
 	}
 
-
-	public function getMinified($in)
+	/**
+	 * Minifies given CSS.
+	 *
+	 * The CSS minification is being done through the awesome cssmin.
+	 *
+	 * @param string $css Compiled raw CSS
+	 * @return string The Minified CSS
+	 */
+	public function getMinified($css)
 	{
 		return (class_exists($this->classes['cssmin']))
-			? cssmin::minify($in)
-			: $in;
+			? cssmin::minify($css)
+			: $css;
 	}
 
-
+	/**
+	 * Provides a possibility to access the file configuration
+	 *
+	 * Returns either a specific config value of a file config,
+	 * like the compile path of the css, or a completely build path to a file.
+	 *
+	 * @param string $prop Property/Keyword (less, css, cache)
+	 * @param null $data Data/Keyword (path, name, ext)
+	 * @return bool|string
+	 */
 	public function getFileRefFromConfig($prop, $data = NULL)
 	{
 		$prop =& $this->$prop;
 		if (!empty($data) && isset($prop[$data])) {
+			// Return specific value
 			return $prop[$data];
 		} elseif ($data === NULL && isset($prop)) {
+			// Build and return complete path/to/file
 			return $prop['path'] . $prop['name'] . '.' . $prop['ext'];
 		} else return FALSE;
 	}
 
-
+	/**
+	 * Sets the remaining file names (css and cache file)
+	 *
+	 * The CSS and Cache file names will be set depending on the LESS root filename.
+	 *
+	 * The Demand Bridge has the ability to parse different LESS roots defined by GET vars,
+	 * so it is necessary to ensure some kind of filename dependency to avoid unintentional
+	 * overwrites od already compiles CSS and Cache files.
+	 *
+	 * @param string $name LESS root filename
+	 * @return void
+	 */
 	public function setFilenames($name)
 	{
 		list($this->css['name'], $this->cache['name']) = array($name, $name);
 	}
 
-
+	/**
+	 * Sets the CSS compile path based on config
+	 *
+	 * @param string $path Path to compile the CSS file into
+	 * @return void
+	 */
 	public function setCompilePath($path)
 	{
 		if (is_dir($path)) $this->css['path'] = $path;
 	}
 
-
+	/**
+	 * Initializes the LESS root file
+	 *
+	 * Additionally sets some base configuration for LESS compilation and will return it's filename
+	 * if the LESS root file is available and accessible.
+	 *
+	 * @param array $less LESS root file path, name and ext
+	 * @return bool|string Depending on the availability of the LESS root file
+	 */
 	public function setLess($less)
 	{
 		if (file_exists($less) && is_readable($less)) {
@@ -206,20 +277,34 @@ class PhpLessDemandBridge
 		}
 	}
 
-
+	/**
+	 * Rendering getter
+	 *
+	 * @return string
+	 */
 	public function getRendering()
 	{
 		return $this->rendering['selected'];
 	}
 
-
+	/**
+	 * Rendering setter
+	 *
+	 * @param string $mode Rendering mode
+	 * @return void
+	 */
 	public function setRendering($mode)
 	{
 		$this->rendering['selected'] = $this->validateRendering($mode);
 	}
 
-
-	private function getFileInfo($fileRef)
+	/**
+	 * Analyizes the given file reference
+	 *
+	 * @param string $fileRef Path/to/file
+	 * @return array Fileinfo
+	 */
+	protected function getFileInfo($fileRef)
 	{
 		$fi = pathinfo($fileRef);
 		return array(
@@ -229,23 +314,11 @@ class PhpLessDemandBridge
 		);
 	}
 
-
-	public static function debug($v)
-	{
-		echo '<pre>' . "\n";
-		if (is_array($v)) {
-			print_r($v);
-		} else {
-			var_dump($v);
-		}
-		echo '</pre>' . "\n";
-	}
-
-
 	/**
-	 * @static
-	 * @param $mode
-	 * @return string
+	 * Validates and sets the rendering
+	 *
+	 * @param string $mode Rendering
+	 * @return string Configured rendering
 	 */
 	protected function validateRendering($mode)
 	{
@@ -277,19 +350,6 @@ class PhpLessDemandBridge
 	public function __set($name, $value)
 	{
 		$this->$name = $value;
-	}
-
-
-
-	/**
-	 * Returns the compiled CSS code when it is converted to a string.
-	 *
-	 * @todo Implement logic
-	 * @return string
-	 */
-	public function __toString()
-	{
-		// return demand obj.
 	}
 
 }
