@@ -61,6 +61,22 @@ class PhpLessDemandBridge
     );
 
 
+	protected $minify = FALSE;
+
+
+	/**
+	 * Holds the used class names
+	 *
+	 * This is required to check for class availability before starting the processes.
+	 *
+	 * @var array
+	 */
+	protected $classes = array(
+		'lessc'		=> 'lessc',
+		'cssmin'	=> 'cssmin'
+	);
+
+
 	/**
 	 * Magical voodoo super function
 	 *
@@ -71,10 +87,10 @@ class PhpLessDemandBridge
 	 * @param $cClass string LESS Compiler Clasname
 	 * @return void
 	 */
-	public function __construct($cClass)
+	public function __construct()
 	{
-		if (!class_exists($cClass)){
-			throw new exception("LESS Compiler (' . $cClass . ') not found; cannot proceed.");
+		if (!class_exists($this->classes['lessc'])){
+			throw new exception("LESS Compiler (' . $this->classes['lessc'] . ') not found; cannot proceed.");
 			exit();
 		}
 	}
@@ -83,6 +99,7 @@ class PhpLessDemandBridge
 	public function init($cfg)
 	{
 		$this->setRendering($cfg['mode']);
+		$this->minify = intval($cfg['minify']);
 
 		if ($filename = $this->setLess($cfg['lessFile'])) {
 
@@ -127,6 +144,8 @@ class PhpLessDemandBridge
 
 		// Recompile LESS
 		$contentNew = lessc::cexecute($contentCache);
+		// CSS Minification
+		if ($this->minify) $contentNew['compiled'] = $this->getMinified($contentNew['compiled']);
 
 		if (!is_array($contentCache)
 			|| $contentNew['updated'] > $contentCache['updated']
@@ -142,6 +161,14 @@ class PhpLessDemandBridge
 
 		if ($return === TRUE) return $contentNew['compiled'];
 
+	}
+
+
+	public function getMinified($in)
+	{
+		return (class_exists($this->classes['cssmin']))
+			? cssmin::minify($in)
+			: $in;
 	}
 
 
