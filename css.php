@@ -42,7 +42,10 @@ if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])
 // Include libs
 include ('./config.php');
 include ('./lib/lessphp/lessc.inc.php');
+include ('./lib/CssMin.php');
 include ('./lib/PhpLessDemandBridge.php');
+
+
 // Init config
 list($debug, $err) = array($config['debug'], FALSE);
 
@@ -60,7 +63,7 @@ if (isset($_GET['mode'])) {
 
 
 // Try Container!
-$DemandBridge = new PhpLessDemandBridge('lessc');
+$DemandBridge = new PhpLessDemandBridge();
 $DemandBridge->init($config);
 
 $mode = $DemandBridge->getRendering();
