@@ -73,6 +73,12 @@ if ($mode === 'compile') {
 	$DemandBridge->compile();
 } elseif ($mode === 'demand'){
 	$css = $DemandBridge->getCss();
+	header('Content-Type: text/css');
+	header('Cache-Control: no-cache, must-revalidate');
+	header('Expires: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+	header("Vary: Accept-Encoding");
+	header('ETag: ' . $DemandBridge->getFingerprint());
+
 	echo $css;
 }
 

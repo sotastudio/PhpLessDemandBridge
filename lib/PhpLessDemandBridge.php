@@ -81,6 +81,13 @@ class PhpLessDemandBridge
 		'cssmin'	=> 'cssmin'
 	);
 
+	/**
+	 * Stores some kind of fingerprint for the etag
+	 *
+	 * @var string
+	 */
+	protected $fingerprint = '';
+
 
 	/**
 	 * Magical voodoo super function.
@@ -143,6 +150,16 @@ class PhpLessDemandBridge
 	}
 
 
+	public function getFingerprint()
+	{
+		return $this->fingerprint;
+	}
+
+	protected function setFingerprint($file, $tstamp)
+	{
+		$this->fingerprint = md5($file . $tstamp);
+	}
+
 	/**
 	 * Main LESS processing
 	 *
@@ -171,6 +188,8 @@ class PhpLessDemandBridge
 
 		// Recompile LESS
 		$contentNew = lessc::cexecute($contentCache);
+		// Set Fingerpring
+		$this->setFingerprint($less_fname, $contentNew['updated']);
 		// CSS Minification
 		if ($this->minify) $contentNew['compiled'] = $this->getMinified($contentNew['compiled']);
 
