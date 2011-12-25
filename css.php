@@ -73,13 +73,20 @@ if ($mode === 'compile') {
 	$DemandBridge->compile();
 } elseif ($mode === 'demand'){
 	$css = $DemandBridge->getCss();
-	header('Content-Type: text/css');
-	header('Cache-Control: no-cache, must-revalidate');
-	header('Expires: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-	header("Vary: Accept-Encoding");
-	header('ETag: ' . $DemandBridge->getFingerprint());
+	$etag = $DemandBridge->getFingerprint();
+	if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) {
+		// Browser already has the file so we tell him nothing changed and exit
+		header('HTTP/1.1 304 Not Modified');
+		exit();
+	} else {
+		header('Content-Type: text/css');
+		header('Cache-Control: no-cache, must-revalidate');
+		header('Expires: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+		header("Vary: Accept-Encoding");
+		header('ETag: ' . $etag);
 
-	echo $css;
+		echo $css;
+	}
 }
 
 

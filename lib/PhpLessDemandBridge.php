@@ -149,7 +149,9 @@ class PhpLessDemandBridge
 		$this->processLess();
 	}
 
-
+	/**
+	 * @return string
+	 */
 	public function getFingerprint()
 	{
 		return $this->fingerprint;
