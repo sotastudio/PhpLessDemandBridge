@@ -10,10 +10,9 @@
  * @link http://code.google.com/p/cssmin/
  * @author Andy Hausmann <andy.hausmann@gmx.de>
  * @copyright 2011 Andy Hausmann <andy.hausmann@gmx.de>
- * @version 0.3.0
+ * @version 0.5.0
  *
  * @todo Correct a bug which causes a rendering error in case of a missing slash at the end of a path
- * @todo Write own timestamp checking method - the less compiler's is not that good, because it has to compile the files first.
  * @todo PHPDoc
  */
 class PhpLessDemandBridge

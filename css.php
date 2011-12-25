@@ -12,41 +12,19 @@
  * @link http://code.google.com/p/cssmin/
  * @author Andy Hausmann <andy.hausmann@gmx.de>
  * @copyright 2011 Andy Hausmann <andy.hausmann@gmx.de>
- * @version 0.3.0
+ * @version 0.5.0
  *
- * @todo Optimite mode handling
+ * @todo Optimize mode handling
  * @todo Optimize debugging stuff
  * @todo Add ability of force recompiling
- * @todo Implement Client-side caching, this implies: sending headers and usage of etag
  * @todo Implement rendering mode 'both'
  */
 
 // Bench: start time
 $start = microtime(true);
 
-
-// Gzip output for faster transfer to client
-ini_set('zlib.output_compression', 2048);
-ini_set('zlib.output_compression_level', 4);
-if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])
-	&& substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')
-	&& function_exists('ob_gzhandler')
-	&& !ini_get('zlib.output_compression')
-	&& ((!ini_get('zlib.output_compression') || intval(ini_get('zlib.output_compression')) == 0))
-){
-	ob_start('ob_gzhandler');
-} else{
-	ob_start();
-}
-
-
-// Include libs
+// Include config
 include ('./config.php');
-include ('./lib/lessphp/lessc.inc.php');
-include ('./lib/CssMin.php');
-include ('./lib/PhpLessDemandBridge.php');
-
-
 // Init config
 list($debug, $err) = array($config['debug'], FALSE);
 
@@ -63,48 +41,62 @@ if (isset($_GET['mode'])) {
 }
 
 
-// Try Container!
-$DemandBridge = new PhpLessDemandBridge();
-$DemandBridge->init($config);
+// Fetch etag / kinda fingerprint to implement client-side caching
+$fingerprint = (file_exists($config['lessFile']))
+	? $config['lessFile'] . filemtime($config['lessFile'])
+	: $config['lessFile'];
+$etag = md5($fingerprint);
 
-$mode = $DemandBridge->getRendering();
 
-if ($mode === 'compile') {
-	$DemandBridge->compile();
-} elseif ($mode === 'demand'){
-	$css = $DemandBridge->getCss();
-	$etag = $DemandBridge->getFingerprint();
-	if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) {
-		// Browser already has the file so we tell him nothing changed and exit
-		header('HTTP/1.1 304 Not Modified');
-		exit();
-	} else {
+if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) {
+	// Browser already has the file so we tell him nothing changed and exit
+	header('HTTP/1.1 304 Not Modified');
+	exit();
+
+} else {
+
+	// Gzip output for faster transfer to client
+	ini_set('zlib.output_compression', 2048);
+	ini_set('zlib.output_compression_level', 4);
+	if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])
+		&& substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')
+		&& function_exists('ob_gzhandler')
+		&& !ini_get('zlib.output_compression')
+		&& ((!ini_get('zlib.output_compression') || intval(ini_get('zlib.output_compression')) == 0))
+	){
+		ob_start('ob_gzhandler');
+	} else{
+		ob_start();
+	}
+
+	// Include advanced libs
+	include ('./lib/lessphp/lessc.inc.php');
+	include ('./lib/CssMin.php');
+	include ('./lib/PhpLessDemandBridge.php');
+
+
+	// Try Container!
+	$DemandBridge = new PhpLessDemandBridge();
+	$DemandBridge->init($config);
+	$mode = $DemandBridge->getRendering();
+
+
+	if ($mode === 'compile') {
+		$DemandBridge->compile();
+	} elseif ($mode === 'demand'){
+		$css = $DemandBridge->getCss();
+		// Not needed because of etag implementation above
+		//$etag = $DemandBridge->getFingerprint();
+
 		header('Content-Type: text/css');
 		header('Cache-Control: no-cache, must-revalidate');
 		header('Expires: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 		header("Vary: Accept-Encoding");
 		header('ETag: ' . $etag);
-
 		echo $css;
+
 	}
 }
-
 
 // Bench: end time
 $end = microtime(true);
-
-
-/*
-if (!$err) {
-	// Collect debug info
-	$times = array(
-		'OLD__' => $tstamp['prev'],
-		'NEW__' => $tstamp['cur'],
-		'BS___' => $tstamp['root'],
-		'BENCH' => $end - $start . ' s'
-	);
-	if ($debug) {
-		print_r($times);
-	}
-}
-*/
