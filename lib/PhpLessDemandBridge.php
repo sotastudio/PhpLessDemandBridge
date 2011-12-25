@@ -150,12 +150,18 @@ class PhpLessDemandBridge
 
 	/**
 	 * @return string
+	 * @deprecated
 	 */
 	public function getFingerprint()
 	{
 		return $this->fingerprint;
 	}
 
+	/**
+	 * @param $file
+	 * @param $tstamp
+	 * @deprecated
+	 */
 	protected function setFingerprint($file, $tstamp)
 	{
 		$this->fingerprint = md5($file . $tstamp);
