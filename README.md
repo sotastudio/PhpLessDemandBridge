@@ -26,7 +26,7 @@ You can put it, for example, in a css/engine/ directory to use the bridge throug
 I give you a little example of a project structure and how to implement and configure the Demand Bridge:
 
 	/project root/
-		frontend files/
+		public directory/
 			css/
 				engine/
 					cache/
@@ -44,7 +44,7 @@ There are two important settings in the config file.
 
 The LESS root file difinition is needed in every case. The whole Demand Bridge bases on it.
 
-	// LESS root file
+    // LESS root file
     // String: path/to/file.less, relative to css.php - can be overridden via GET var
     'lessFile'		=> '../bootstrap.less',
 
@@ -53,3 +53,10 @@ The CSS compile dir is only needed when you want to compile - if not, just ignor
     // Stylesheet compiling dir
     // String: path/to/dir/ to put the compiled CSS in, relative to css.php
     'compilePath' 	=> '../',
+
+## Something's not clear enough? Wanna help me improving this app?
+
+Please help me improving the quick start guide and code. 
+It is not possible to consider every case of usage, to avoid bugs and so forth.
+
+This project has the ability to get much stronger and faster - but only with your hints and reported bugs. Don't hesitate!
