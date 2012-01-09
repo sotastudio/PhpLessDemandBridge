@@ -26,7 +26,11 @@ $start = microtime(true);
 // Include config
 include ('./config.php');
 // Init config
-list($debug, $err) = array($config['debug'], FALSE);
+list ($debug, $err, $expires) = array(
+	$config['debug'], 
+	FALSE,
+	(is_int($config['expires']) ? time() + intval($config['expires']) : strtotime($config['expires'])) 
+);
 
 
 // Process GET var: file; contains the filename of the LESS root file
@@ -90,7 +94,8 @@ if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === 
 
 		header('Content-Type: text/css');
 		header('Cache-Control: no-cache, must-revalidate');
-		header('Expires: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+		header('Expires: ' .gmdate('D, d M Y H:i:s', (!empty($expires)) ? $expires : time()). ' GMT');
+		//header('Expires: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 		header("Vary: Accept-Encoding");
 		header('ETag: ' . $etag);
 		echo $css;
