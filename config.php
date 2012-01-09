@@ -37,6 +37,7 @@ $config = array(
 	'compilePath' 	=> './files/',
 
 	// Misc stuff
+	'expires'		=> '+1 month', // int: seconds to add / keyword: e.g. +1 month
 	'minify'		=> 1, // boolean
 	'debug' 		=> 0, // boolean
 );
