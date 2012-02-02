@@ -28,16 +28,16 @@ class PhpLessDemandBridge
 		'ext'	=> 'less'
 	);
 
-    /**
-     * Holds the CSS config - used to compile LESS and save the result into a CSS file.
-     *
-     * @var array
-     */
-    protected $css = array(
-        'path' 	=> './files/',
-        'name' 	=> 'styles',
+	/**
+	 * Holds the CSS config - used to compile LESS and save the result into a CSS file.
+	 *
+	 * @var array
+	 */
+	protected $css = array(
+		'path' 	=> './files/',
+		'name' 	=> 'styles',
 		'ext'	=> 'css'
-    );
+	);
 
 	/**
 	 * Holds the cache file config - used for demand rendering
@@ -50,16 +50,16 @@ class PhpLessDemandBridge
 		'ext'  => 'cache'
 	);
 
-    /**
-     * Holds the Rendering config.
-     *
-     * @var array
-     */
-    protected $rendering = array(
-        'available' => array('demand', 'compile', 'both'),
-        'fallback'  => 'demand',
+	/**
+	 * Holds the Rendering config.
+	 *
+	 * @var array
+	 */
+	protected $rendering = array(
+		'available' => array('demand', 'compile', 'both'),
+		'fallback'  => 'demand',
 		'selected'	=> ''
-    );
+	);
 
 	/**
 	 * CSS minification flag.
