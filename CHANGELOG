@@ -1,9 +1,0 @@
-2011-12-16 Andy Hausmann <andy.hausmann@gmx.de>
-
-	* Added PHPDoc
-	* Revised in order of simplification and cleanup.
-	* Implemented CSS minification.
-
-2011-12-15 Andy Hausmann <andy.hausmann@gmx.de>
-
-	* Initial release.
