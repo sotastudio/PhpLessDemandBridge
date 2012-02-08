@@ -57,62 +57,12 @@
     
 
     
-      <h2>Install</h2>
-      <p>Clone/download this archive into your project
-
-	git clone git@github.com:MorphexX/PhpLessDemandBridge.git
-
-Move the package contents to the desired directory in your project.
-You can put it, for example, in a css/engine/ directory to use the bridge through a simple HTML link-tag
-
-	<link rel="stylesheet" type="text/css" media="all"  href="css/engine/css.php?file=bootstrap.less" />
-
-I give you a little example of a project structure and how to implement and configure the Demand Bridge:
-
-	/project root/
-		public directory/
-			css/
-				engine/
-					cache/
-					lib/
-					config.php
-					css.php
-				bootstrap.less
-				forms.less (imported by bootstrap.less)
-				mixins.less (imported by bootstrap.less)
-				patterns.less (imported by bootstrap.less)
-				variables.less (imported by bootstrap.less)
-
-To use it properly, you have to adjust the config file (config.php) depending to your needs and file storage.
-There are two important settings in the config file.
-
-The LESS root file difinition is needed in every case. The whole Demand Bridge bases on it.
-
-    // LESS root file
-    // String: path/to/file.less, relative to css.php - can be overridden via GET var
-    'lessFile'		=> '../bootstrap.less',
-
-The CSS compile dir is only needed when you want to compile - if not, just ignore it.
-
-    // Stylesheet compiling dir
-    // String: path/to/dir/ to put the compiled CSS in, relative to css.php
-    'compilePath' 	=> '../',
-</p>
+      <h2>Author & Contact</h2>
+      <p>Andy Hausmann (andy.hausmann@gmx.de)
+<br/>      </p>
     
 
-    
-
-    
-      <h2>Authors</h2>
-      <p>Andy Hausmann (andy.hausmann@gmx.de)<br/>      </p>
-    
-
-    
-      <h2>Contact</h2>
-      <p>Andy Hausmann (andy.hausmann@gmx.de)<br/>      </p>
-    
-
-    <h2>Download</h2>
+	<h2>Download</h2>
     <p>
       You can download this project in either
       <a href="https://github.com/andyhausmann/PhpLessDemandBridge/zipball/master">zip</a> or
