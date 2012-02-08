@@ -13,7 +13,7 @@
 
 		#container {
 			margin: 0 auto;
-			width: 700px;
+			width: 960px;
 		}
 
 		h1 {
@@ -51,10 +51,21 @@
 			font-style: italic;
 		}
 
-		.download {
-			float: right;
+		.download { float: right; }
+		.download a {
+			display: inline-block;
+			text-indent: -9999px;
+			width: 60px;
+			height: 70px;
+			text-decoration: none;
+			background-position: center center;
+			background-repeat: no-repeat;
+			background-size: 80px;
 		}
+		.download .zip { background-image: url(https://github.com/images/modules/download/zip.png); }
+		.download .tar { background-image: url(https://github.com/images/modules/download/tar.png); }
 
+		
 		pre {
 			background: #000;
 			color: #fff;
@@ -82,11 +93,11 @@
 <div id="container">
 
 	<div class="download">
-		<a href="https://github.com/andyhausmann/PhpLessDemandBridge/zipball/master">
-			<img border="0" width="45" src="https://github.com/images/modules/download/zip.png">
+		<a href="https://github.com/andyhausmann/PhpLessDemandBridge/zipball/master" class="zip">
+			download as zip
 		</a>
-		<a href="https://github.com/andyhausmann/PhpLessDemandBridge/tarball/master">
-			<img border="0" width="45" src="https://github.com/images/modules/download/tar.png">
+		<a href="https://github.com/andyhausmann/PhpLessDemandBridge/tarball/master" class="tar">
+			download as tar
 		</a>
 	</div>
 
