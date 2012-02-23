@@ -4,7 +4,7 @@
 ## What does it do and what is it good for?
 
 Good question. Did you already know the [lessphp project](https://github.com/leafo/lessphp)?
-It is all about lessphp. Many of us don't want to care about LESS compilation - we just want to use it!
+It is all about lessphp and it depends on it, of course. Many of us don't want to care about LESS compilation - we just want to use it!
 
 This project gives you the ability to get your compiled stylesheet based on LESS source files - on demand.
 If the LESS stuff already has been compiled, the Demand Bridge will pass through a cached version of it.
@@ -17,6 +17,10 @@ For this reason, it is simply called "Demand Bridge".
 Clone/download this archive into your project
 
 	git clone git@github.com:MorphexX/PhpLessDemandBridge.git
+	
+Clone/download [lessphp](https://github.com/leafo/lessphp) into the lib folder
+
+	giit clone git://github.com/leafo/lessphp.git
 
 Move the package contents to the desired directory in your project.
 You can put it, for example, in a css/engine/ directory to use the bridge through a simple HTML link-tag
