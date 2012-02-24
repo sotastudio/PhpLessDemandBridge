@@ -1,1 +1,22 @@
-.idea
+# OS generated files
+####################
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
+
+
+# IDE files
+###########
+.idea/
+
+
+# Dev and temp files
+####################
+.cache/*
+.files/
+*.cache
+*.css
+*.less
+lib/lessphp/
+bak.*
