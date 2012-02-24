@@ -49,7 +49,7 @@ if (isset($_GET['mode'])) {
 if ( $config['check_import_mtime'] ) {
   if ( file_exists($config['lessFile']) ) {
     $less_file_dir = dirname($config['lessFile']);
-    $mtimes = "";
+    $mtimes = $config['lessFile'] . strval(filemtime($config['lessFile']));
     $files_found = array();
     function get_file_mtimes($file) {
       global $mtimes, $files_found, $less_file_dir;
@@ -80,7 +80,6 @@ if ( $config['check_import_mtime'] ) {
     : $config['lessFile'];
 }
 $etag = md5($fingerprint);
-
 
 if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) {
 	// Browser already has the file so we tell him nothing changed and exit

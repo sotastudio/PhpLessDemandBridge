@@ -1,4 +1,4 @@
-a:4:{s:4:"root";s:14:"../global.less";s:8:"compiled";s:119566:"#lo .boxed { box-shadow:1px 2px 2px #cccccc; }
+a:4:{s:4:"root";s:14:"../global.less";s:8:"compiled";s:119980:"#lo .boxed { box-shadow:1px 2px 2px #cccccc; }
 #lo .graybordered { border:1px solid #dddddd; }
 #lo .bordered { border:1px solid #c6d9e8; }
 #lo .darklink { color:#1a1a1a; }
@@ -295,6 +295,11 @@ input[type="text"].pickDate {
   padding:0px;
   margin:0px;
 }
+.module .main.view-list thead tr {
+  border-bottom:thin solid #e5f2fa;
+  color:#959595;
+}
+.module .main.view-list tbody tr { border-bottom:thin dotted #e5f2fa; }
 .module.scroll-container .main { margin:0; }
 .module.scroll-container table th { white-space:nowrap; }
 .module.scroll-container table th, .module.scroll-container table td {
@@ -394,11 +399,14 @@ input[type="text"].pickDate {
 .sidebar .navControls { background:url(/images/bg-nav-controls-sidebar-rt.gif) no-repeat 100% 0; }
 .sidebar .navControls ul { background:url(/images/bg-nav-controls-sidebar-lf.gif) no-repeat 0 0; }
 .editable .void { background:transparent; }
-.editable .editable { background:transparent url("/images/edit-icon.gif") no-repeat 100% 50%; }
-.editable .loading { background:transparent url("/images/ajax-loader-icon-sm.gif") no-repeat 100% 50%; }
-.editable .warning { background:transparent url("/images/edit-icon-warning.gif") no-repeat 100% 50%; }
-.editable .error { background:transparent url("/images/edit-icon-error.gif") no-repeat 100% 50%; }
-.editable .editok { background:transparent url("/images/edit-icon-ok.gif") no-repeat 100% 50%; }
+.editable .editable {
+  background:transparent url("/images/edit-icon.gif") no-repeat 100% 50%;
+  background:transparent url("/images/edit-icon.gif") no-repeat 100% 50% !important;
+}
+.editable .loading {
+  background:transparent url("/images/ajax-loader-icon-sm.gif") no-repeat 100% 50%;
+  background:transparent url("/images/ajax-loader-icon-sm.gif") no-repeat 100% 50% !important;
+}
 table.editable tr.editable td.label {
   font-weight:bold;
   width:1px;
@@ -460,12 +468,12 @@ table.editable tr.editable tr.inner-editable td { padding:0; }
   left:8px;
   cursor:pointer;
 }
-div.buttons span span.processing {
-  float:none;
-  width:16px;
-  background:url(/images/ajax-loader-icon-orange.gif) no-repeat 0 0;
+#account_map_holder {
+  padding-right:13px;
+  text-align:right;
+  vertical-align:top;
 }
-#hardware-add-wizard-partial select#inventory-options, #inventory-hardware select#template-options { width:auto; }
+#accountInfo table { width:100%; }
 #accountInfo tr.editable td.label {
   font-weight:bold;
   width:1px;
@@ -500,6 +508,12 @@ div.buttons span span.processing {
 }
 #accountInfo tr.editable tr.inner-editable td { padding:0; }
 #accountInfo td.data { padding-left:10px; }
+div.buttons span span.processing {
+  float:none;
+  width:16px;
+  background:url(/images/ajax-loader-icon-orange.gif) no-repeat 0 0;
+}
+#hardware-add-wizard-partial select#inventory-options, #inventory-hardware select#template-options { width:auto; }
 #navSession {
   float:right;
   margin:1px 0 0;
@@ -4064,16 +4078,23 @@ h2.has-dr-site {
   padding-left:37px;
 }
 a.em7-link {
+  -webkit-border-radius:2px;
+  -moz-border-radius:2px;
+  border-radius:2px;
+  -moz-background-clip:padding;
+  -webkit-background-clip:padding-box;
+  background-clip:padding-box;
+  -webkit-box-shadow:0 1px 2px rgba(0,0,0,0.1);
+  -moz-box-shadow:0 1px 2px rgba(0,0,0,0.1);
+  box-shadow:0 1px 2px rgba(0,0,0,0.1);
   background:url("/images/em7-icon.png") no-repeat scroll 50% 50% transparent;
   border:thin solid lightBlue;
-  border-radius:2px 2px 2px 2px;
   display:block;
   float:left;
   height:20px;
   margin-left:10px;
   text-indent:-9999px;
   width:20px;
-  box-shadow:1px 1px 1px #cccccc;
   position:relative;
 }
 .ui-autocomplete a.inactive { text-decoration:line-through; }
@@ -4168,4 +4189,4 @@ a.em7-link {
   margin:-2px 5px 0 0;
 }
 #service-builder .hardware div { margin-bottom:8px; }
-";s:5:"files";a:6:{s:46:"/usr/local/logicops3/php/site/less/global.less";i:1330068479;s:57:"/usr/local/logicops3/php/site/less/elements/elements.less";i:1329991306;s:46:"/usr/local/logicops3/php/site/less/mixins.less";i:1330068302;s:45:"/usr/local/logicops3/php/site/less/reset.less";i:1330068302;s:46:"/usr/local/logicops3/php/site/less/layout.less";i:1330068425;s:46:"/usr/local/logicops3/php/site/less/module.less";i:1330072385;}s:7:"updated";i:1330072396;}
+";s:5:"files";a:7:{s:46:"/usr/local/logicops3/php/site/less/global.less";i:1330080225;s:57:"/usr/local/logicops3/php/site/less/elements/elements.less";i:1329991306;s:46:"/usr/local/logicops3/php/site/less/mixins.less";i:1330079511;s:45:"/usr/local/logicops3/php/site/less/reset.less";i:1330068302;s:46:"/usr/local/logicops3/php/site/less/layout.less";i:1330068425;s:46:"/usr/local/logicops3/php/site/less/module.less";i:1330079540;s:52:"/usr/local/logicops3/php/site/less/page/account.less";i:1330079703;}s:7:"updated";i:1330080241;}
