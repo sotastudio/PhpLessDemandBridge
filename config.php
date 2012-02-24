@@ -23,21 +23,21 @@
  * @version 0.3.0
  */
 $config = array(
-
 	// Rendering mode
 	// String: demand, compile, both - can be overridden via GET var
 	'mode'			=> 'demand',
 
 	// LESS root file
 	// String: path/to/file.less, relative to css.php - can be overridden via GET var
-	'lessFile'		=> './files/styles.less',
+	'lessFile'		=> '../global.less',
 
 	// Stylesheet compiling dir
 	// String: path/to/dir/ to put the compiled CSS in, relative to css.php
 	'compilePath' 	=> './files/',
 
 	// Misc stuff
-	'expires'		=> '+1 month', // int: seconds to add / keyword: e.g. +1 month
-	'minify'		=> 1, // boolean
-	'debug' 		=> 0, // boolean
+	'expires'		=> '-2 month', // int: seconds to add / keyword: e.g. +1 month
+	'minify'		=> 0, // boolean
+  'debug' 		=> 0, // boolean
+  'check_import_mtime' => 1, // boolean
 );
