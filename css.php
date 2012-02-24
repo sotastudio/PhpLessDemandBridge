@@ -46,9 +46,40 @@ if (isset($_GET['mode'])) {
 
 
 // Fetch etag / kinda fingerprint to implement client-side caching
-$fingerprint = (file_exists($config['lessFile']))
-	? $config['lessFile'] . filemtime($config['lessFile'])
-	: $config['lessFile'];
+if ( $config['check_import_mtime'] ) {
+  if ( file_exists($config['lessFile']) ) {
+    $less_file_dir = dirname($config['lessFile']);
+    $mtimes = "";
+    $files_found = array();
+    function get_file_mtimes($file) {
+      global $mtimes, $files_found, $less_file_dir;
+      if ( ! isset($files_found[$file]) ) {
+        $files_found[$file] = true;
+        if ( file_exists($file) ) {
+          $contents = file_get_contents($file);
+          if ( preg_match_all('/\@import\s+[\'"](\S+)[\'"]/', $contents, $m) ) {
+            foreach ( $m[1] as $import_file ) {
+              get_file_mtimes($less_file_dir . '/' . $import_file);
+            }
+          } else {
+            $mtimes .= $file . strval(filemtime($file)); 
+          }  
+        } else {
+          $mtimes .= $file;
+        }
+      }
+    }
+    get_file_mtimes($config['lessFile']);
+    $fingerprint = $mtimes;
+  } else {
+    $fingerprint = $config['lessFile'];
+  }
+} else {
+  $fingerprint = (file_exists($config['lessFile']))
+    ? $config['lessFile'] . filemtime($config['lessFile'])
+    : $config['lessFile'];
+}
+    error_log($fingerprint);
 $etag = md5($fingerprint);
 
 

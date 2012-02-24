@@ -36,7 +36,8 @@ $config = array(
 	'compilePath' 	=> './files/',
 
 	// Misc stuff
-	'expires'		=> '+1 month', // int: seconds to add / keyword: e.g. +1 month
-	'minify'		=> false, // boolean
-	'debug' 		=> true, // boolean
+	'expires'		=> '-2 month', // int: seconds to add / keyword: e.g. +1 month
+	'minify'		=> 0, // boolean
+  'debug' 		=> 0, // boolean
+  'check_import_mtime' => 1, // boolean
 );
