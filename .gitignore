@@ -13,6 +13,7 @@ Thumbs.db
 
 # Dev and temp files
 ####################
+/index.php
 .cache/*
 .files/
 *.cache

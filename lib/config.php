@@ -19,25 +19,27 @@
  * @link https://github.com/leafo/lessphp
  * @link http://code.google.com/p/cssmin/
  * @author Andy Hausmann <andy.hausmann@gmx.de>
- * @copyright 2011 Andy Hausmann <andy.hausmann@gmx.de>
- * @version 0.3.0
+ * @copyright 2011-2012 Andy Hausmann <andy.hausmann@gmx.de>
  */
+
 $config = array(
 
 	// Rendering mode
-	// String: demand, compile, both - can be overridden via GET var
-	'mode'			=> 'demand',
+	// String/keyword: demand, compile, both - can be overridden via GET var 'mode'
+	'mode' => 'demand',
+	// Boolean: Be aware of performance loss when activating!
+	'recursiveChangeDetection' => 1,
 
 	// LESS root file
-	// String: path/to/file.less, relative to css.php - can be overridden via GET var
-	'lessFile'		=> './files/styles.less',
+	// String: path/to/file.less, relative to css.php - can be overridden via GET var 'file'
+	'lessFile' => './files/styles.less',
 
 	// Stylesheet compiling dir
 	// String: path/to/dir/ to put the compiled CSS in, relative to css.php
-	'compilePath' 	=> './files/',
+	'compilePath' => './files/',
 
 	// Misc stuff
-	'expires'		=> '+1 month', // int: seconds to add / keyword: e.g. +1 month
-	'minify'		=> 1, // boolean
-	'debug' 		=> 0, // boolean
+	'expires' => '+1 month', // int: seconds to add / keyword: e.g. +1 month
+	'minify' => 1, // boolean
+	'debug' => 0, // boolean
 );

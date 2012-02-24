@@ -58,6 +58,17 @@ The CSS compile dir is only needed when you want to compile - if not, just ignor
     // String: path/to/dir/ to put the compiled CSS in, relative to css.php
     'compilePath' 	=> '../',
 
+## Caching system
+
+Oh yeah, it's really the coolest feature. The Bridge's caching works on both sides: the server's and the client's.
+
+If you're using it for the first time, the Bridge will compile everything through lessphp and saves the result as a cache file.
+Additional to the afterwards delivered css, the Bridge tells your Browser to cache it client-side which is being realized by some cache headers you can manipulate in the config file.
+
+## Changes detection
+
+Of course, the Bridge will also detect recently made changes at LESS stuff. The next time anybody requests the css, the Bridge recompiles it and caches everything again.
+
 ## Something's not clear enough? Wanna help me improving this app?
 
 Please help me improving the quick start guide and code. 

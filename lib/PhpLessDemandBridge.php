@@ -9,8 +9,7 @@
  * @link https://github.com/leafo/lessphp
  * @link http://code.google.com/p/cssmin/
  * @author Andy Hausmann <andy.hausmann@gmx.de>
- * @copyright 2011 Andy Hausmann <andy.hausmann@gmx.de>
- * @version 0.5.0
+ * @copyright 2011-2012 Andy Hausmann <andy.hausmann@gmx.de>
  *
  * @todo Correct a bug which causes a rendering error in case of a missing slash at the end of a path
  * @todo PHPDoc
@@ -23,9 +22,9 @@ class PhpLessDemandBridge
 	 * @var array
 	 */
 	protected $less = array(
-		'path' 	=> './files/',
-		'name' 	=> 'styles',
-		'ext'	=> 'less'
+		'path' => './files/',
+		'name' => 'styles',
+		'ext' => 'less'
 	);
 
 	/**
@@ -34,9 +33,9 @@ class PhpLessDemandBridge
 	 * @var array
 	 */
 	protected $css = array(
-		'path' 	=> './files/',
-		'name' 	=> 'styles',
-		'ext'	=> 'css'
+		'path' => './files/',
+		'name' => 'styles',
+		'ext' => 'css'
 	);
 
 	/**
@@ -47,7 +46,7 @@ class PhpLessDemandBridge
 	protected $cache = array(
 		'path' => './cache/',
 		'name' => 'styles',
-		'ext'  => 'cache'
+		'ext' => 'cache'
 	);
 
 	/**
@@ -57,8 +56,8 @@ class PhpLessDemandBridge
 	 */
 	protected $rendering = array(
 		'available' => array('demand', 'compile', 'both'),
-		'fallback'  => 'demand',
-		'selected'	=> ''
+		'fallback' => 'demand',
+		'selected' => ''
 	);
 
 	/**
@@ -76,8 +75,8 @@ class PhpLessDemandBridge
 	 * @var array
 	 */
 	protected $classes = array(
-		'lessc'		=> 'lessc',
-		'cssmin'	=> 'cssmin'
+		'lessc' => 'lessc',
+		'cssmin' => 'cssmin'
 	);
 
 	/**
@@ -99,7 +98,7 @@ class PhpLessDemandBridge
 	 */
 	public function __construct()
 	{
-		if (!class_exists($this->classes['lessc'])){
+		if (!class_exists($this->classes['lessc'])) {
 			throw new exception("LESS Compiler (' . $this->classes['lessc'] . ') not found; cannot proceed.");
 		}
 	}
@@ -203,8 +202,8 @@ class PhpLessDemandBridge
 		if (!is_array($contentCache)
 			|| $contentNew['updated'] > $contentCache['updated']
 			|| !file_exists($css_fname)
-			|| $force === TRUE)
-		{
+			|| $force === TRUE
+		) {
 			$rendering = $this->getRendering();
 			if ($rendering === 'demand' || $rendering === 'both')
 				file_put_contents($cache_fname, serialize($contentNew));
@@ -334,9 +333,9 @@ class PhpLessDemandBridge
 	{
 		$fi = pathinfo($fileRef);
 		return array(
-			'path' 	=> $fi['dirname'] . '/',
-			'name'  => $fi['filename'],
-			'ext' 	=> $fi['extension']
+			'path' => $fi['dirname'] . '/',
+			'name' => $fi['filename'],
+			'ext' => $fi['extension']
 		);
 	}
 

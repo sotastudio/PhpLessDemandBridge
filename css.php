@@ -11,8 +11,7 @@
  * @link https://github.com/leafo/lessphp
  * @link http://code.google.com/p/cssmin/
  * @author Andy Hausmann <andy.hausmann@gmx.de>
- * @copyright 2011 Andy Hausmann <andy.hausmann@gmx.de>
- * @version 0.5.0
+ * @copyright 2011-2012 Andy Hausmann <andy.hausmann@gmx.de>
  *
  * @todo Optimize mode handling
  * @todo Optimize debugging stuff
@@ -23,13 +22,15 @@
 // Bench: start time
 $start = microtime(true);
 
-// Include config
-include ('./config.php');
+// Include config and helper functions
+include ('./lib/config.php');
+include ('./lib/functions.php');
+
 // Init config
 list ($debug, $err, $expires) = array(
-	$config['debug'], 
+	$config['debug'], // not implemented yet
 	FALSE,
-	(is_int($config['expires']) ? time() + intval($config['expires']) : strtotime($config['expires'])) 
+	(is_int($config['expires']) ? time() + intval($config['expires']) : strtotime($config['expires']))
 );
 
 
@@ -47,7 +48,7 @@ if (isset($_GET['mode'])) {
 
 // Fetch etag / kinda fingerprint to implement client-side caching
 $fingerprint = (file_exists($config['lessFile']))
-	? $config['lessFile'] . filemtime($config['lessFile'])
+	? getFingerprint($config['lessFile'], intval($config['recursiveChangeDetection']))
 	: $config['lessFile'];
 $etag = md5($fingerprint);
 
@@ -67,9 +68,9 @@ if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === 
 		&& function_exists('ob_gzhandler')
 		&& !ini_get('zlib.output_compression')
 		&& ((!ini_get('zlib.output_compression') || intval(ini_get('zlib.output_compression')) == 0))
-	){
+	) {
 		ob_start('ob_gzhandler');
-	} else{
+	} else {
 		ob_start();
 	}
 
@@ -77,7 +78,6 @@ if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === 
 	include ('./lib/lessphp/lessc.inc.php');
 	include ('./lib/CssMin.php');
 	include ('./lib/PhpLessDemandBridge.php');
-
 
 	// Try Container!
 	$DemandBridge = new PhpLessDemandBridge();
@@ -87,19 +87,14 @@ if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === 
 
 	if ($mode === 'compile') {
 		$DemandBridge->compile();
-	} elseif ($mode === 'demand'){
+	} elseif ($mode === 'demand') {
 		$css = $DemandBridge->getCss();
-		// Not needed because of etag implementation above
-		//$etag = $DemandBridge->getFingerprint();
-
 		header('Content-Type: text/css');
 		header('Cache-Control: no-cache, must-revalidate');
-		header('Expires: ' .gmdate('D, d M Y H:i:s', (!empty($expires)) ? $expires : time()). ' GMT');
-		//header('Expires: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+		header('Expires: ' . gmdate('D, d M Y H:i:s', (!empty($expires)) ? $expires : time()) . ' GMT');
 		header("Vary: Accept-Encoding");
 		header('ETag: ' . $etag);
 		echo $css;
-
 	}
 }
 
