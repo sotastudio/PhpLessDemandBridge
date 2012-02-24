@@ -58,6 +58,12 @@ The CSS compile dir is only needed when you want to compile - if not, just ignor
     // String: path/to/dir/ to put the compiled CSS in, relative to css.php
     'compilePath' 	=> '../',
 
+New: By activating the RecursiveChangeDetection, all files, imported by the LESS Bootstrap, will be checked for changes - if there are any, the Recompilier will be kicked.
+
+	// Boolean: Be aware of performance loss when activating!
+	'recursiveChangeDetection' => 1,
+
+
 ## Caching system
 
 Oh yeah, it's really the coolest feature. The Bridge's caching works on both sides: the server's and the client's.
