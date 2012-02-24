@@ -79,7 +79,6 @@ if ( $config['check_import_mtime'] ) {
     ? $config['lessFile'] . filemtime($config['lessFile'])
     : $config['lessFile'];
 }
-    error_log($fingerprint);
 $etag = md5($fingerprint);
 
 
