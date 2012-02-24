@@ -19,5 +19,4 @@ Thumbs.db
 *.cache
 *.css
 *.less
-lib/lessphp/
 bak.*
