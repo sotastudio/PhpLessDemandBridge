@@ -7,7 +7,7 @@
  * Handling of rendering mode selection and everything else.
  *
  * @package PhpLessDemandBridge
- * @link https://github.com/MorphexX/PhpLessDemandBridge
+ * @link https://github.com/andyhausmann/PhpLessDemandBridge
  * @link https://github.com/leafo/lessphp
  * @link http://code.google.com/p/cssmin/
  * @author Andy Hausmann <andy.hausmann@gmx.de>
