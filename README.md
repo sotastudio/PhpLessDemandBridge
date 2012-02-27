@@ -35,7 +35,6 @@ I give you a little example of a project structure and how to implement and conf
 				engine/
 					cache/
 					lib/
-					config.php
 					css.php
 				bootstrap.less
 				forms.less (imported by bootstrap.less)
