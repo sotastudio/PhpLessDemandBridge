@@ -12,11 +12,6 @@
  * @link http://code.google.com/p/cssmin/
  * @author Andy Hausmann <andy.hausmann@gmx.de>
  * @copyright 2011-2012 Andy Hausmann <andy.hausmann@gmx.de>
- *
- * @todo Optimize mode handling
- * @todo Optimize debugging stuff
- * @todo Add ability of force recompiling
- * @todo Implement rendering mode 'both'
  */
 
 // Bench: start time

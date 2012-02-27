@@ -4,15 +4,14 @@
  *
  * Parsing/compiling stuff.
  *
+ * Processing of fringerprint has been moved to the bootstrap due to performance issues.
+ *
  * @package PhpLessDemandBridge
  * @link https://github.com/andyhausmann/PhpLessDemandBridge
  * @link https://github.com/leafo/lessphp
  * @link http://code.google.com/p/cssmin/
  * @author Andy Hausmann <andy.hausmann@gmx.de>
  * @copyright 2011-2012 Andy Hausmann <andy.hausmann@gmx.de>
- *
- * @todo Correct a bug which causes a rendering error in case of a missing slash at the end of a path
- * @todo PHPDoc
  */
 class PhpLessDemandBridge
 {
@@ -148,6 +147,11 @@ class PhpLessDemandBridge
 	}
 
 	/**
+	 * Gets the LESS file fingerprint for internal usage
+	 *
+	 * The finderprint comes from phpless during the compile process.
+	 * Currently it is not beeing used due to performance issues.
+	 *
 	 * @return string
 	 * @deprecated
 	 */
@@ -157,6 +161,11 @@ class PhpLessDemandBridge
 	}
 
 	/**
+	 * Sets the LESS file fingerprint for internal usage
+	 *
+	 * The finderprint comes from phpless during the compile process.
+	 * Currently it is not beeing used due to performance issues.
+	 *
 	 * @param $file
 	 * @param $tstamp
 	 * @deprecated
@@ -194,8 +203,8 @@ class PhpLessDemandBridge
 
 		// Recompile LESS
 		$contentNew = lessc::cexecute($contentCache);
-		// Set Fingerpring
-		$this->setFingerprint($less_fname, $contentNew['updated']);
+		// Deprecated and unused: Set Fingerprint
+		//$this->setFingerprint($less_fname, $contentNew['updated']);
 		// CSS Minification
 		if ($this->minify) $contentNew['compiled'] = $this->getMinified($contentNew['compiled']);
 
