@@ -21,6 +21,9 @@ $start = microtime(true);
 include ('./lib/config.php');
 include ('./lib/functions.php');
 
+// Set Default timezone
+date_default_timezone_set($config['timezone']);
+
 // Init config
 list ($debug, $err, $expires) = array(
 	$config['debug'], // not implemented yet
