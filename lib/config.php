@@ -23,6 +23,8 @@
  */
 
 $config = array(
+	// Set your timezone
+	'timezone' => 'Europe/Berlin',
 
 	// Rendering mode
 	// String/keyword: demand, compile, both - can be overridden via GET var 'mode'
