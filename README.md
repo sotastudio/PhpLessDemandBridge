@@ -16,7 +16,7 @@ For this reason, it is simply called "Demand Bridge".
 
 Clone/download this archive into your project
 
-	git clone git@github.com:MorphexX/PhpLessDemandBridge.git
+	git clone git@github.com:andyhausmann/PhpLessDemandBridge.git
 	
 Clone/download [lessphp](https://github.com/leafo/lessphp) into the lib folder
 
